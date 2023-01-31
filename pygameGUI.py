@@ -9,13 +9,11 @@ numberkeys = [K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]
 
 
 def main():
-
     global DISPLAYSURF, FONT, problemSurf, problemRect, saveproblem
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((400, 300))
     pygame.display.set_caption('Game')
     FONT = pygame.font.Font('freesansbold.ttf', 32)
-
 
     gameTitle()
     ans,problem = display()
@@ -56,7 +54,6 @@ def main():
                 elif event.key == K_BACKSPACE:
                     text = text[:-1]
 
-
                 # 'move this to saveQuestion ?'
                 # textSurf = FONT.render(str(text), True, GREEN)
                 # textRect = textSurf.get_rect()
@@ -64,12 +61,20 @@ def main():
                 # DISPLAYSURF.blit(textSurf, textRect)  # display tile before the loop
                 # pygame.display.update()
 
-        #check
-        if ans == text:
-            print(ans,text)
-            correct()
-        elif ans != text:
-            incorrect()
+        if text != '':
+            if int(ans) == int(text):
+                DISPLAYSURF.fill(BLACK)
+                correct()
+                saveQuestion(problem, text)
+                pygame.display.update()
+                pygame.time.wait(1000)
+                text = ''
+                ans,problem = display()
+                saveQuestion(problem, text)
+                pygame.display.update()
+            elif int(ans) != int(text) and len(str(ans)) == len(text):
+                incorrect()
+                pygame.display.update()
 
 
 
@@ -118,6 +123,7 @@ def helpme():
     helpmeRect.center = (200, 100)
     DISPLAYSURF.blit(helpmeSurf, helpmeRect)
 
+
 def gameTitle():
     titleText = 'MATH GAME'
     titleSurf = FONT.render(titleText, True, GREEN)
@@ -128,6 +134,7 @@ def gameTitle():
         pygame.event.get()
         return
     pygame.display.update()
+
 
 def checkForInput():
     if len(pygame.event.get(QUIT)) > 0:
@@ -144,9 +151,7 @@ def terminate():
     sys.exit()
 
 
-
 def saveQuestion(x,text):
-
     savequestion = str(x) + str(text)
     saveSurf = FONT.render(savequestion, True, GREEN)
     saveRect = saveSurf.get_rect()
@@ -154,7 +159,8 @@ def saveQuestion(x,text):
     DISPLAYSURF.blit(saveSurf, saveRect)
 
 
-main()
+if __name__ == '__main__':
+    main()
 
 # alist = ['cat', 'dog', 'bird']
 # txt = random.choice(alist)
@@ -167,4 +173,4 @@ main()
 '''use a start ui?'''
 '''the text display has to be outside the game loop because it stack in the loop'''
 '''To wait for a specific key to trigger the next event. the event as to be under the KEYDOWN.'''
-'''add a waitforinput condition '''
+'''add a waitforinput condition?'''
