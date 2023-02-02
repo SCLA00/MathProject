@@ -9,7 +9,7 @@ numberkeys = [K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]
 
 
 def main():
-    global DISPLAYSURF, FONT, problemSurf, problemRect, saveproblem
+    global DISPLAYSURF, FONT
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((400, 300))
     pygame.display.set_caption('Game')
@@ -17,7 +17,6 @@ def main():
 
     gameTitle()
     ans,problem = display()
-    print(ans)
     text = ''
 
     while True:
@@ -54,13 +53,6 @@ def main():
                 elif event.key == K_BACKSPACE:
                     text = text[:-1]
 
-                # 'move this to saveQuestion ?'
-                # textSurf = FONT.render(str(text), True, GREEN)
-                # textRect = textSurf.get_rect()
-                # textRect.center = (270, 150)
-                # DISPLAYSURF.blit(textSurf, textRect)  # display tile before the loop
-                # pygame.display.update()
-
         if text != '':
             if int(ans) == int(text):
                 DISPLAYSURF.fill(BLACK)
@@ -75,6 +67,10 @@ def main():
             elif int(ans) != int(text) and len(str(ans)) == len(text):
                 incorrect()
                 pygame.display.update()
+            elif len(str(ans)) < len(text):
+                incorrect()
+                pygame.display.update()
+
 
 
 
@@ -146,6 +142,7 @@ def checkForInput():
         terminate()
     return keyUpEvents[0].key
 
+
 def terminate():
     pygame.quit()
     sys.exit()
@@ -162,15 +159,6 @@ def saveQuestion(x,text):
 if __name__ == '__main__':
     main()
 
-# alist = ['cat', 'dog', 'bird']
-# txt = random.choice(alist)
-# txtSurf = FONT.render(txt, True, GREEN)
-# txtRect = txtSurf.get_rect()
-# txtRect.center = (200, 150)
-# DISPLAYSURF.blit(txtSurf, txtRect)
 
-
-'''use a start ui?'''
-'''the text display has to be outside the game loop because it stack in the loop'''
-'''To wait for a specific key to trigger the next event. the event as to be under the KEYDOWN.'''
-'''add a waitforinput condition?'''
+'add: timer, correct/incorrect list, show final result?'
+'fix code to work with dynamic windows size'
