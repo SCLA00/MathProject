@@ -5,8 +5,6 @@ RED = (255, 0, 0)
 GREEN = (65, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0,)
-numberkeys = [K_1, K_2, K_3, K_4, K_5, K_6, K_7, K_8, K_9, K_0]
-
 
 def main():
     global DISPLAYSURF, FONT
@@ -19,6 +17,17 @@ def main():
     ans,problem = display()
     text = ''
 
+    #Display Timer
+    counter, trackTime = 5, '5'.rjust(3)
+    pygame.time.set_timer(pygame.USEREVENT, 1000)
+    clock = pygame.time.Clock()
+
+
+    'tring to track the number and question and correct answers'
+    numofquestion = 0
+    numofcorrect = 0
+
+    onTimer = False
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -28,6 +37,7 @@ def main():
                 DISPLAYSURF.fill(BLACK)
                 saveQuestion(problem, text)
                 pygame.display.update()
+                onTimer = True
 
             elif event.type == KEYDOWN:
                 if event.key == K_1:
@@ -53,6 +63,21 @@ def main():
                 elif event.key == K_BACKSPACE:
                     text = text[:-1]
 
+            if onTimer == True:
+                DISPLAYSURF.fill((BLACK))
+                DISPLAYSURF.blit(FONT.render(trackTime, True, GREEN), (340, 10))
+                pygame.display.update([339,6,57,36]) #[x,y, w,h]
+                clock.tick(60)
+                if event.type == pygame.USEREVENT:
+                    counter -= 1
+                    if counter > 0:
+                        trackTime = str(counter).rjust(3)
+                    else:
+                        onTimer = False
+                        timeText()
+                        print('num of q: ' + str(numofquestion))
+                        print('num of c: ' + str(numofcorrect))
+
         if text != '':
             if int(ans) == int(text):
                 DISPLAYSURF.fill(BLACK)
@@ -65,18 +90,26 @@ def main():
                 saveQuestion(problem, text)
                 pygame.display.update()
             elif int(ans) != int(text) and len(str(ans)) == len(text):
+                DISPLAYSURF.fill(BLACK)
+                saveQuestion(problem, text)
                 incorrect()
+                pygame.display.update()
+                pygame.time.wait(1000)
+                text = ''
                 pygame.display.update()
             elif len(str(ans)) < len(text):
+                DISPLAYSURF.fill(BLACK)
+                saveQuestion(problem, text)
                 incorrect()
                 pygame.display.update()
-
-
+                pygame.time.wait(1000)
+                text = ''
+                pygame.display.update()
 
 
 def mathlogic():
-    firstvalue = random.randint(1, 9)
-    secondvalue = random.randint(1, 9)
+    firstvalue = random.randint(1, 50)
+    secondvalue = random.randint(1, 50)
     correct = firstvalue + secondvalue
     return firstvalue, secondvalue, correct
 
@@ -131,6 +164,15 @@ def gameTitle():
         return
     pygame.display.update()
 
+def timeText():
+    DISPLAYSURF.fill(BLACK)
+    timesUpText = 'TIMES UP'
+    timesUpSurf = FONT.render(timesUpText, True, GREEN)
+    timesUpRect = timesUpSurf.get_rect()
+    timesUpRect.center = (200, 150)
+    DISPLAYSURF.blit(timesUpSurf, timesUpRect)
+    pygame.display.update()
+
 
 def checkForInput():
     if len(pygame.event.get(QUIT)) > 0:
@@ -160,5 +202,5 @@ if __name__ == '__main__':
     main()
 
 
-'add: timer, correct/incorrect list, show final result?'
+'todo: add: timer, correct/incorrect list, show final result?'
 'fix code to work with dynamic windows size'
