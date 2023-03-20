@@ -18,7 +18,7 @@ def main():
     text = ''
 
     #Display Timer
-    counter, trackTime = 5, '5'.rjust(3)
+    counter, trackTime = 60, '60'.rjust(3)
     pygame.time.set_timer(pygame.USEREVENT, 1000)
     clock = pygame.time.Clock()
 
