@@ -23,7 +23,7 @@ def main():
     clock = pygame.time.Clock()
 
 
-    'tring to track the number and question and correct answers'
+    'trying to track the number and question and correct answers'
     numofquestion = 0
     numofcorrect = 0
 
