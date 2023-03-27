@@ -184,6 +184,7 @@ def gameTitle():
         return
     pygame.display.update()
 
+    
 def timeText():
     width, height = pygame.display.get_surface().get_size()
     DISPLAYSURF.fill(BLACK)
