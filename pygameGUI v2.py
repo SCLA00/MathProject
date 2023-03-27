@@ -7,11 +7,14 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0,)
 
 def main():
-    global DISPLAYSURF, FONT, numofquestion, numofcorrect
+    global DISPLAYSURF, FONT, FONTSIZE
     pygame.init()
-    DISPLAYSURF = pygame.display.set_mode((400, 300))
+    DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
     pygame.display.set_caption('Game')
-    FONT = pygame.font.Font('freesansbold.ttf', 32)
+    'trying to set font size base on windows sizes'
+    width, height = pygame.display.get_surface().get_size()
+    FONTSIZE = int(height*32/300)
+    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
 
     gameTitle()
     ans, problem = mathlogicplus()
@@ -32,7 +35,8 @@ def main():
             if event.type == QUIT:
                 terminate()
 
-            elif event.type == KEYUP:
+            elif event.type == KEYUP or event.type == VIDEORESIZE:
+                FONTSIZE = int(height * 32 / 300)
                 DISPLAYSURF.fill(BLACK)
                 saveQuestion(problem, text)
                 pygame.display.update()
@@ -63,9 +67,12 @@ def main():
                     text = text[:-1]
 
             if onTimer == True:
+                'note: how to set the text 10 pixel away?'
+                width, height = pygame.display.get_surface().get_size()
+                set_w = width - 60
                 DISPLAYSURF.fill((BLACK))
-                DISPLAYSURF.blit(FONT.render(trackTime, True, GREEN), (340, 10))
-                pygame.display.update([339,6,57,36]) #[x,y, w,h]
+                DISPLAYSURF.blit(FONT.render(trackTime, True, GREEN), (set_w, 10))
+                pygame.display.update([set_w,6,60,40]) #[x,y, w,h] [340,6,57,36]
                 clock.tick(60)
                 if event.type == pygame.USEREVENT:
                     counter -= 1
@@ -74,7 +81,6 @@ def main():
                     else:
                         onTimer = False
                         timeText()
-
 
         if text != '':
             if str(ans) == str(text):
@@ -135,26 +141,25 @@ def mathlogicplus():
     elif oper == '/':
         dividend = firstdigit * seconddigit
         cor = int(dividend / seconddigit)
-        print(cor)
         problemtext = str(dividend) + ' / ' + str(seconddigit)+' = '
         return cor, problemtext
 
 
 def incorrect():
-    #DISPLAYSURF.fill(BLACK)
+    width, height = pygame.display.get_surface().get_size()
     incorrectText = 'Incorrect'
     incorrectSurf = FONT.render(incorrectText, True, RED)
     incorrectRect = incorrectSurf.get_rect()
-    incorrectRect.center = (200, 100)
+    incorrectRect.center = (width/2, height/2-50)
     DISPLAYSURF.blit(incorrectSurf, incorrectRect)
 
 
 def correct():
-    # DISPLAYSURF.fill(BLACK)
+    width, height = pygame.display.get_surface().get_size()
     correctText = 'Correct'
     correctSurf = FONT.render(correctText, True, GREEN)
     correctRect = correctSurf.get_rect()
-    correctRect.center = (200, 100)
+    correctRect.center = (width/2, height/2-50)
     DISPLAYSURF.blit(correctSurf, correctRect)
 
 
@@ -168,10 +173,11 @@ def helpme():
 
 
 def gameTitle():
+    width, height = pygame.display.get_surface().get_size()
     titleText = 'MATH GAME'
     titleSurf = FONT.render(titleText, True, GREEN)
     titleRect = titleSurf.get_rect()
-    titleRect.center = (200,150)
+    titleRect.center = (width/2, height/2)
     DISPLAYSURF.blit(titleSurf, titleRect)
     if checkForInput():
         pygame.event.get()
@@ -179,11 +185,12 @@ def gameTitle():
     pygame.display.update()
 
 def timeText():
+    width, height = pygame.display.get_surface().get_size()
     DISPLAYSURF.fill(BLACK)
     timesUpText = 'TIMES UP'
     timesUpSurf = FONT.render(timesUpText, True, GREEN)
     timesUpRect = timesUpSurf.get_rect()
-    timesUpRect.center = (200, 150)
+    timesUpRect.center = (width/2, height/2)
     DISPLAYSURF.blit(timesUpSurf, timesUpRect)
     pygame.display.update()
 
@@ -205,10 +212,11 @@ def terminate():
 
 
 def saveQuestion(x,text):
+    width, height = pygame.display.get_surface().get_size()
     savequestion = str(x) + str(text)
     saveSurf = FONT.render(savequestion, True, GREEN)
     saveRect = saveSurf.get_rect()
-    saveRect.center = (200, 150)
+    saveRect.center = (width/2, height/2)
     DISPLAYSURF.blit(saveSurf, saveRect)
 
 
@@ -216,5 +224,6 @@ if __name__ == '__main__':
     main()
 
 
-'todo: add: timer, correct/incorrect list, show final result?'
+'todo: correct/incorrect list, show final result?'
 'fix code to work with dynamic windows size'
+'03/25/2023: cant show the sec correctly after resizing'
