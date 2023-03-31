@@ -10,11 +10,6 @@ def main():
     global DISPLAYSURF, FONT, FONTSIZE
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
-    pygame.display.set_caption('Game')
-    'trying to set font size base on windows sizes'
-    width, height = pygame.display.get_surface().get_size()
-    FONTSIZE = int(height*32/300)
-    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
 
     gameTitle()
     ans, problem = mathlogicplus()
@@ -36,7 +31,6 @@ def main():
                 terminate()
 
             elif event.type == KEYUP or event.type == VIDEORESIZE:
-                FONTSIZE = int(height * 32 / 300)
                 DISPLAYSURF.fill(BLACK)
                 saveQuestion(problem, text)
                 pygame.display.update()
@@ -67,13 +61,18 @@ def main():
                     text = text[:-1]
 
             if onTimer == True:
-                'note: how to set the text 10 pixel away?'
+
                 width, height = pygame.display.get_surface().get_size()
-                set_w = width - 60
-                DISPLAYSURF.fill((BLACK))
-                DISPLAYSURF.blit(FONT.render(trackTime, True, GREEN), (set_w, 10))
-                pygame.display.update([set_w,6,60,40]) #[x,y, w,h] [340,6,57,36]
-                clock.tick(60)
+                DISPLAYSURF.fill(BLACK)
+                FONTSIZE = fontAdj()
+                FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
+                secSurf = FONT.render(trackTime, True, GREEN)
+                secRect = secSurf.get_rect()
+                secRect.topright = (width, 0)
+                DISPLAYSURF.blit(secSurf, secRect)
+                pygame.display.update(secRect)  # [x,y, w,h] [340,6,57,36]
+                #clock.tick(100)
+
                 if event.type == pygame.USEREVENT:
                     counter -= 1
                     if counter > 0:
@@ -175,6 +174,8 @@ def helpme():
 def gameTitle():
     width, height = pygame.display.get_surface().get_size()
     titleText = 'MATH GAME'
+    FONTSIZE = fontAdj()
+    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
     titleSurf = FONT.render(titleText, True, GREEN)
     titleRect = titleSurf.get_rect()
     titleRect.center = (width/2, height/2)
@@ -184,7 +185,7 @@ def gameTitle():
         return
     pygame.display.update()
 
-    
+
 def timeText():
     width, height = pygame.display.get_surface().get_size()
     DISPLAYSURF.fill(BLACK)
@@ -215,11 +216,18 @@ def terminate():
 def saveQuestion(x,text):
     width, height = pygame.display.get_surface().get_size()
     savequestion = str(x) + str(text)
+    FONTSIZE = fontAdj()
+    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
     saveSurf = FONT.render(savequestion, True, GREEN)
     saveRect = saveSurf.get_rect()
     saveRect.center = (width/2, height/2)
     DISPLAYSURF.blit(saveSurf, saveRect)
 
+
+def fontAdj():
+    width, height = pygame.display.get_surface().get_size()
+    FONTSIZE = int(height*32/300)
+    return FONTSIZE
 
 if __name__ == '__main__':
     main()
@@ -227,4 +235,3 @@ if __name__ == '__main__':
 
 'todo: correct/incorrect list, show final result?'
 'fix code to work with dynamic windows size'
-'03/25/2023: cant show the sec correctly after resizing'
