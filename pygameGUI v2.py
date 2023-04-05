@@ -7,7 +7,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0,)
 
 def main():
-    global DISPLAYSURF, FONT, FONTSIZE
+    global DISPLAYSURF, FONT, FONTSIZE,text
     pygame.init()
     DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
 
@@ -60,8 +60,15 @@ def main():
                 elif event.key == K_BACKSPACE:
                     text = text[:-1]
 
-            if onTimer == True:
+                elif event.key == K_n:
+                    pygame.quit()
+                elif event.key == K_y:
+                    main()
 
+                elif event.key == K_ESCAPE:
+                    pygame.quit()
+
+            if onTimer == True:
                 width, height = pygame.display.get_surface().get_size()
                 DISPLAYSURF.fill(BLACK)
                 FONTSIZE = fontAdj()
@@ -72,7 +79,6 @@ def main():
                 DISPLAYSURF.blit(secSurf, secRect)
                 pygame.display.update(secRect)  # [x,y, w,h] [340,6,57,36]
                 #clock.tick(100)
-
                 if event.type == pygame.USEREVENT:
                     counter -= 1
                     if counter > 0:
@@ -80,6 +86,8 @@ def main():
                     else:
                         onTimer = False
                         timeText()
+                        time.sleep(2)
+                        playAgain()
 
         if text != '':
             if str(ans) == str(text):
@@ -113,8 +121,8 @@ def main():
 
 
 def mathlogicplus():
-    firstdigit = random.randint(1, 10)
-    seconddigit = random.randint(1, 10)
+    firstdigit = random.randint(1, 12)
+    seconddigit = random.randint(1, 12)
     oper = random.choice('+-*/')
 
     if oper == '+':
@@ -145,7 +153,7 @@ def mathlogicplus():
 
 
 def incorrect():
-    width, height = pygame.display.get_surface().get_size()
+    width, height = pygame.display.get_surface().get_size()math
     incorrectText = 'Incorrect'
     incorrectSurf = FONT.render(incorrectText, True, RED)
     incorrectRect = incorrectSurf.get_rect()
@@ -163,7 +171,6 @@ def correct():
 
 
 def helpme():
-    # DISPLAYSURF.fill(BLACK)
     helpmeText = 'Some thing when wrong!'
     helpmeSurf = FONT.render(helpmeText, True, GREEN)
     helpmeRect = helpmeSurf.get_rect()
@@ -229,9 +236,20 @@ def fontAdj():
     FONTSIZE = int(height*32/300)
     return FONTSIZE
 
+
+def playAgain():
+    width, height = pygame.display.get_surface().get_size()
+    DISPLAYSURF.fill(BLACK)
+    playText = 'Play again? [Y/N]'
+    playSurf = FONT.render(playText, True, GREEN)
+    playRect = playSurf.get_rect()
+    playRect.center = (width/2, height/2)
+    DISPLAYSURF.blit(playSurf, playRect)
+    pygame.display.update()
+
+
 if __name__ == '__main__':
     main()
 
 
 'todo: correct/incorrect list, show final result?'
-'fix code to work with dynamic windows size'
