@@ -7,11 +7,10 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0,)
 
 def main():
-    global DISPLAYSURF, FONT, FONTSIZE,text
+    global DISPLAYSURF, FONT, FONTSIZE
     pygame.init()
-    DISPLAYSURF = fullScreen()
-    #DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
-
+    #DISPLAYSURF = fullScreen()
+    DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
 
     gameTitle()
     ans, problem = mathlogicplus()
@@ -74,13 +73,13 @@ def main():
                 width, height = pygame.display.get_surface().get_size()
                 DISPLAYSURF.fill(BLACK)
                 FONTSIZE = fontAdj()
-                FONT = pygame.font.Font('Gugi-Regular.ttf', FONTSIZE)
+                FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
                 secSurf = FONT.render(trackTime, True, GREEN)
                 secRect = secSurf.get_rect()
                 secRect.topright = (width, 0)
                 DISPLAYSURF.blit(secSurf, secRect)
                 pygame.display.update(secRect)  # [x,y, w,h] [340,6,57,36]
-                #clock.tick(100)
+                clock.tick(100)
                 if event.type == pygame.USEREVENT:
                     counter -= 1
                     if counter > 0:
@@ -160,7 +159,8 @@ def incorrect():
     incorrectText = 'Incorrect'
     incorrectSurf = FONT.render(incorrectText, True, RED)
     incorrectRect = incorrectSurf.get_rect()
-    incorrectRect.center = (width/2, height/2-50)
+    'note: 50 is not enough in fullscreen'
+    incorrectRect.center = (width/2, height/2 - (FONTSIZE + 10))
     DISPLAYSURF.blit(incorrectSurf, incorrectRect)
 
 
@@ -169,7 +169,7 @@ def correct():
     correctText = 'Correct'
     correctSurf = FONT.render(correctText, True, GREEN)
     correctRect = correctSurf.get_rect()
-    correctRect.center = (width/2, height/2-50)
+    correctRect.center = (width/2, height/2 - (FONTSIZE + 10))
     DISPLAYSURF.blit(correctSurf, correctRect)
 
 
@@ -177,7 +177,7 @@ def gameTitle():
     width, height = pygame.display.get_surface().get_size()
     titleText = 'MATH GAME'
     FONTSIZE = fontAdj()
-    FONT = pygame.font.Font('Gugi-Regular.ttf', FONTSIZE)
+    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
     titleSurf = FONT.render(titleText, True, GREEN)
     titleRect = titleSurf.get_rect()
     titleRect.center = (width/2, height/2)
@@ -220,7 +220,7 @@ def saveQuestion(x,text):
     width, height = pygame.display.get_surface().get_size()
     savequestion = str(x) + str(text)
     FONTSIZE = fontAdj()
-    FONT = pygame.font.Font('Gugi-Regular.ttf', FONTSIZE)
+    FONT = pygame.font.Font('freesansbold.ttf', FONTSIZE)
     saveSurf = FONT.render(savequestion, True, GREEN)
     saveRect = saveSurf.get_rect()
     saveRect.center = (width/2, height/2)
@@ -229,7 +229,7 @@ def saveQuestion(x,text):
 
 def fontAdj():
     width, height = pygame.display.get_surface().get_size()
-    FONTSIZE = int(height*32/300)
+    FONTSIZE = int(height*30/300)
     return FONTSIZE
 
 
