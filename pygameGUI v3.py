@@ -11,9 +11,10 @@ def main():
     global DISPLAYSURF, FONT, FONTSIZE
     pygame.init()
     #DISPLAYSURF = fullScreen()
-    DISPLAYSURF = pygame.display.set_mode((400,300), RESIZABLE)
+    DISPLAYSURF = pygame.display.set_mode((400, 300), RESIZABLE)
+
     FONTSIZE = fontAdj()
-    FONT = pygame.font.SysFont('georgia', FONTSIZE)
+    FONT = pygame.font.Font('DS-DIGI.TTF', FONTSIZE)
 
     gameTitle()
     ans, problem = mathlogicplus()
@@ -34,15 +35,10 @@ def main():
             if event.type == QUIT:
                 terminate()
 
-            elif event.type == VIDEORESIZE:
+            elif event.type == KEYUP or event.type == VIDEORESIZE:
                 DISPLAYSURF.fill(BLACK)
                 FONTSIZE = fontAdj()
-                FONT = pygame.font.SysFont('georgia', FONTSIZE)
-                gameTitle()
-                pygame.display.update()
-
-            elif event.type == KEYUP:
-                DISPLAYSURF.fill(BLACK)
+                FONT = pygame.font.Font('DS-DIGI.TTF', FONTSIZE)
                 saveQuestion(problem, user_answer)
                 onTimer = True
 
@@ -60,7 +56,6 @@ def main():
                 elif event.key == K_ESCAPE:
                     terminate()
 
-
             if onTimer == True:
                 width, height = pygame.display.get_surface().get_size()
                 DISPLAYSURF.fill(BLACK)
@@ -77,10 +72,8 @@ def main():
                     else:
                         onTimer = False
                         displayMessage('Times Up', GREEN, 0)
-                        pygame.time.wait(1000)
+                        pygame.time.wait(1500)
                         playAgain()
-
-
 
         if user_answer != '':
             'check if user_input is correct and show the corresponding user_answer'
@@ -97,7 +90,7 @@ def main():
                 DISPLAYSURF.fill(BLACK)
                 saveQuestion(problem, user_answer)
                 displayMessage('Incorrect', RED, FONTSIZE)
-                pygame.time.wait(1000)
+                pygame.time.wait(5000)
                 user_answer = ''
 
             elif len(str(ans)) < len(user_answer):
@@ -108,34 +101,37 @@ def main():
                 user_answer = ''
 
 
-
 def mathlogicplus():
-    firstdigit = random.randint(1, 12)
-    seconddigit = random.randint(1, 12)
     oper = random.choice('+-*/')
-    if oper == '+':
-        cor = firstdigit + seconddigit
-        problemtext = str(firstdigit)+' + '+str(seconddigit)+' = '
-        return cor, problemtext
-    elif oper == '-':
-        'trying to avoid negative solution'
-        if firstdigit < seconddigit:
-            cor = seconddigit - firstdigit
-            problemtext = str(seconddigit) + ' - ' + str(firstdigit) + ' = '
-            return cor, problemtext
-        else:
-            cor = firstdigit - seconddigit
-            problemtext = str(firstdigit)+' - '+str(seconddigit)+' = '
-            return cor, problemtext
-    elif oper == '*':
-        cor = firstdigit * seconddigit
-        problemtext = str(firstdigit)+' * '+str(seconddigit)+' = '
-        return cor, problemtext
-    elif oper == '/':
-        dividend = firstdigit * seconddigit
-        cor = int(dividend / seconddigit)
-        problemtext = str(dividend) + ' / ' + str(seconddigit)+' = '
-        return cor, problemtext
+    if oper == '+' or oper == '-':
+        firstdigit = random.randint(1, 99)
+        seconddigit = random.randint(1, 99)
+        if oper == '+':
+            ans = firstdigit + seconddigit
+            problemtext = f'{firstdigit} + {seconddigit} = '
+            return ans, problemtext
+        elif oper == '-':
+            'trying to avoid negative solution'
+            if firstdigit < seconddigit:
+                ans = seconddigit - firstdigit
+                problemtext = f'{firstdigit} - {seconddigit} = '
+                return ans, problemtext
+            else:
+                ans = firstdigit - seconddigit
+                problemtext = f'{firstdigit} - {seconddigit} = '
+                return ans, problemtext
+    elif oper == '*' or oper == '/':
+        firstdigit = random.randint(1, 12)
+        seconddigit = random.randint(1, 12)
+        if oper == '*':
+            ans = firstdigit * seconddigit
+            problemtext = f'{firstdigit} * {seconddigit} = '
+            return ans, problemtext
+        elif oper == '/':
+            dividend = firstdigit * seconddigit
+            ans = int(dividend / seconddigit)
+            problemtext = f'{firstdigit} / {seconddigit} = '
+            return ans, problemtext
 
 
 def displayMessage(textItem, colorItem, fontItem):
@@ -145,7 +141,7 @@ def displayMessage(textItem, colorItem, fontItem):
     displayText = textItem
     displayTextSurf = FONT.render(displayText, True, colorItem)
     displayTextRect = displayTextSurf.get_rect()
-    displayTextRect.center = (width/2, height/2 - fontItem)
+    displayTextRect.center = (width / 2, height / 2 - fontItem)
     DISPLAYSURF.blit(displayTextSurf, displayTextRect)
     pygame.display.update(displayTextRect)
 
@@ -154,9 +150,10 @@ def playAgain():
     width, height = pygame.display.get_surface().get_size()
     DISPLAYSURF.fill(BLACK)
     playText = 'Play again? [Y/N]'
-    playSurf = FONT.render(playText, True, GREEN,)
+    FONT = pygame.font.SysFont('georgia', 30)
+    playSurf = FONT.render(playText, True, GREEN)
     playRect = playSurf.get_rect()
-    playRect.center = (width/2, height/2)
+    playRect.center = (width / 2, height / 2)
     DISPLAYSURF.blit(playSurf, playRect)
     pygame.display.update()
 
@@ -166,7 +163,7 @@ def gameTitle():
     titleText = 'MATH GAME'
     titleSurf = FONT.render(titleText, True, GREEN)
     titleRect = titleSurf.get_rect()
-    titleRect.center = (width/2, height/2)
+    titleRect.center = (width / 2, height / 2)
     DISPLAYSURF.blit(titleSurf, titleRect)
     if checkForInput():
         pygame.event.get()
@@ -195,19 +192,18 @@ def saveQuestion(problem, user_answer):
     savequestion = str(problem) + str(user_answer)
     saveSurf = FONT.render(savequestion, True, GREEN)
     saveRect = saveSurf.get_rect()
-    saveRect.center = (width/2, height/2)
+    saveRect.center = (width / 2, height / 2)
     DISPLAYSURF.blit(saveSurf, saveRect)
     pygame.display.update()
 
 
 def fontAdj():
     width, height = pygame.display.get_surface().get_size()
-    FONTSIZE = int(height*40/300)
+    FONTSIZE = int(height * 22 / 300)
     return FONTSIZE
 
 
 if __name__ == '__main__':
     main()
-
 
 'todo: correct/incorrect list, show final result?'
