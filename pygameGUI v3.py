@@ -77,6 +77,7 @@ def main():
 
         if user_answer != '':
             'check if user_input is correct and show the corresponding user_answer'
+
             if str(ans) == str(user_answer):
                 DISPLAYSURF.fill(BLACK)
                 displayMessage('Correct', GREEN, FONTSIZE)
@@ -90,7 +91,7 @@ def main():
                 DISPLAYSURF.fill(BLACK)
                 saveQuestion(problem, user_answer)
                 displayMessage('Incorrect', RED, FONTSIZE)
-                pygame.time.wait(5000)
+                pygame.time.wait(1000)
                 user_answer = ''
 
             elif len(str(ans)) < len(user_answer):
@@ -111,13 +112,12 @@ def mathlogicplus():
             problemtext = f'{firstdigit} + {seconddigit} = '
             return ans, problemtext
         elif oper == '-':
-            'trying to avoid negative solution'
-            if firstdigit < seconddigit:
+            if int(firstdigit) < int(seconddigit):
                 ans = seconddigit - firstdigit
-                problemtext = f'{firstdigit} - {seconddigit} = '
+                problemtext = f'{seconddigit} - {firstdigit} = '
                 return ans, problemtext
             else:
-                ans = firstdigit - seconddigit
+                ans = int(firstdigit) - int(seconddigit)
                 problemtext = f'{firstdigit} - {seconddigit} = '
                 return ans, problemtext
     elif oper == '*' or oper == '/':
@@ -130,9 +130,8 @@ def mathlogicplus():
         elif oper == '/':
             dividend = firstdigit * seconddigit
             ans = int(dividend / seconddigit)
-            problemtext = f'{firstdigit} / {seconddigit} = '
+            problemtext = f'{dividend} / {seconddigit} = '
             return ans, problemtext
-
 
 def displayMessage(textItem, colorItem, fontItem):
     'correct, incorrect, timesup'
